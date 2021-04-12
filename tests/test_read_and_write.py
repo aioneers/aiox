@@ -9,7 +9,7 @@ def test_read_and_write():
     data_path = Path(__file__).parent.absolute() / "test_data"
     file_name = data_path / "sample_materials_inv_and_demand.csv"
 
-    aio.read_and_write(file_name, data_path, verbose=True)
+    aiox.read_and_write(file_name, data_path, verbose=True)
 
     parquet_file_name = (
         Path(__file__).parent.absolute()
@@ -27,7 +27,7 @@ def test_read_and_write():
 
 def test_read_and_write_all():
     data_path = Path(__file__).parent.absolute() / "test_data"
-    aio.read_and_write_all(data_path)
+    aiox.read_and_write_all(data_path)
 
     parquet_file_name = (
         Path(__file__).parent.absolute()
@@ -57,7 +57,7 @@ def test_read_and_concat():
     df_1.to_parquet(file1)
     df_2.to_parquet(file2)
 
-    aio.read_and_concat([file1, file2])
+    aiox.read_and_concat([file1, file2])
     os.remove(file1)
     os.remove(file2)
     os.rmdir(data_path)
@@ -66,7 +66,7 @@ def test_read_and_concat():
 def test_read_all_sheets():
     data_path = Path(__file__).parent.absolute() / "test_data"
     file_name = data_path / "multi_sheets.xlsx"
-    aio.read_all_sheets(file_name, data_path)
+    aiox.read_all_sheets(file_name, data_path)
 
     csv_sheet = Path(__file__).parent.absolute() / "test_data/py_multi_sheets.csv"
 

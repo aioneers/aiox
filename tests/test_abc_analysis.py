@@ -21,7 +21,7 @@ def test_abc_analysis_w_multiple_dimensions():
     df["Region"] = regions.values()
     df["City"] = cities.values()
 
-    results = aio.abc_analysis(
+    results = aiox.abc_analysis(
         df,
         primary_dimension="Product",
         secondary_dimensions=["Country", "Region", "City"],
@@ -47,7 +47,7 @@ def test_abc_analysis_wo_additional_dimensions():
     df["Product"] = products.values()
     df["Quantity"] = quantities.values()
 
-    results = aio.abc_analysis(
+    results = aiox.abc_analysis(
         df, primary_dimension="Product", numeric_dimension="Quantity"
     )
 

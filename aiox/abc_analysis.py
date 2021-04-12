@@ -58,7 +58,7 @@ def abc_analysis(
     >>> df["Product"] = products.values()
     >>> df["Quantity"] = quantities.values()
     >>>
-    >>> results = aio.abc_analysis(
+    >>> results = aiox.abc_analysis(
     >>>     df, primary_dimension="Product", numeric_dimension="Quantity"
     >>> )
     """

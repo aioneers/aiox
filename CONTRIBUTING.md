@@ -108,7 +108,7 @@ return object : Object type of the return (e.g. int)
 Examples
 --------
 >>> import aiox
->>> result = aio.your_function(first_input_parameter,second_input_parameter)
+>>> result = aiox.your_function(first_input_parameter,second_input_parameter)
 >>> result
 """
 ```
