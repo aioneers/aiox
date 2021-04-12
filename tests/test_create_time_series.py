@@ -1,4 +1,4 @@
-import aio
+import aiox
 import numpy as np
 import pandas as pd
 
@@ -8,7 +8,7 @@ def test_create_time_series():
 
     # create time-series with defined distribution
     for i in range(100):
-        quantities = aio.create_time_series(
+        quantities = aiox.create_time_series(
             distribution="normal",
             p_mean=1000,
             p_std=300,

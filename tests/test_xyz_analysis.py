@@ -1,15 +1,15 @@
 import numpy as np
 import pandas as pd
-import aio
+import aiox
 
 
 def test_xyz_analysis():
     quantities = {}
     np.random.seed(seed=42)
     df = pd.DataFrame()
-    # create random time-series with aio.create_time_series function
+    # create random time-series with aiox.create_time_series function
     for i in range(100):
-        quantities = aio.create_time_series(
+        quantities = aiox.create_time_series(
             distribution="normal",
             p_mean=1000,
             p_std=300,
@@ -39,7 +39,7 @@ def test_xyz_analysis():
     df = df.drop(np.random.choice(len(df), (int(len(df) / 2))))
 
     # run test with created sample data
-    result = aio.xyz_analysis(
+    result = aiox.xyz_analysis(
         df=df,
         primary_dimension_keys=["Material", "Country", "Region"],
         relevant_numeric_dimension="Quantity",
@@ -56,9 +56,9 @@ def test_xyz_analysis_key_without_demand():
     quantities = {}
     np.random.seed(seed=42)
     df = pd.DataFrame()
-    # create random time series with aio.create_time_series function
+    # create random time series with aiox.create_time_series function
     for i in range(1):
-        quantities = aio.create_time_series(
+        quantities = aiox.create_time_series(
             distribution="normal",
             p_mean=1000,
             p_std=300,
@@ -90,7 +90,7 @@ def test_xyz_analysis_key_without_demand():
     df["Quantity"] = 0
 
     # run test with created sample data
-    result = aio.xyz_analysis(
+    result = aiox.xyz_analysis(
         df=df,
         primary_dimension_keys=["Material", "Country", "Region"],
         relevant_numeric_dimension="Quantity",
@@ -107,9 +107,9 @@ def test_xyz_analysis_str_as_input_for_pri_dim():
     quantities = {}
     np.random.seed(seed=42)
     df = pd.DataFrame()
-    # create random time series with aio.create_time_series function
+    # create random time series with aiox.create_time_series function
     for i in range(10):
-        quantities = aio.create_time_series(
+        quantities = aiox.create_time_series(
             distribution="normal",
             p_mean=1000,
             p_std=300,
@@ -139,7 +139,7 @@ def test_xyz_analysis_str_as_input_for_pri_dim():
     df = df.drop(np.random.choice(len(df), (int(len(df) / 2))))
 
     # run test with created sample data
-    result = aio.xyz_analysis(
+    result = aiox.xyz_analysis(
         df=df,
         primary_dimension_keys="Material",
         relevant_numeric_dimension="Quantity",
@@ -156,9 +156,9 @@ def test_xyz_analysis_short_list_as_input_for_pri_dim():
     quantities = {}
     np.random.seed(seed=42)
     df = pd.DataFrame()
-    # create random time series with aio.create_time_series function
+    # create random time series with aiox.create_time_series function
     for i in range(10):
-        quantities = aio.create_time_series(
+        quantities = aiox.create_time_series(
             distribution="normal",
             p_mean=1000,
             p_std=300,
@@ -188,7 +188,7 @@ def test_xyz_analysis_short_list_as_input_for_pri_dim():
     df = df.drop(np.random.choice(len(df), (int(len(df) / 2))))
 
     # run test with created sample data
-    result = aio.xyz_analysis(
+    result = aiox.xyz_analysis(
         df=df,
         primary_dimension_keys=["Material"],
         relevant_numeric_dimension="Quantity",
@@ -205,9 +205,9 @@ def test_xyz_analysis_weekly():
     quantities = {}
     np.random.seed(seed=42)
     df = pd.DataFrame()
-    # create random time series with aio.create_time_series function
+    # create random time series with aiox.create_time_series function
     for i in range(10):
-        quantities = aio.create_time_series(
+        quantities = aiox.create_time_series(
             distribution="normal",
             p_mean=1000,
             p_std=300,
@@ -237,7 +237,7 @@ def test_xyz_analysis_weekly():
     df = df.drop(np.random.choice(len(df), (int(len(df) / 2))))
 
     # run test with created sample data
-    result = aio.xyz_analysis(
+    result = aiox.xyz_analysis(
         df=df,
         primary_dimension_keys="Material",
         relevant_numeric_dimension="Quantity",

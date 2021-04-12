@@ -40,9 +40,9 @@ def create_time_series(
     Examples
     --------
     >>> df = pd.DataFrame()
-    >>> # create random time-series with aio.create_time_series function
+    >>> # create random time-series with aiox.create_time_series function
     >>> for i in range(100):
-    >>>     quantities = aio.create_time_series(
+    >>>     quantities = aiox.create_time_series(
     >>>         distribution="normal",
     >>>         p_mean=1000,
     >>>         p_std=300,

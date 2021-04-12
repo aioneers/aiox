@@ -1,5 +1,5 @@
 import os
-import aio
+import aiox
 
 dbutils = None
 
@@ -27,9 +27,9 @@ def vault_get_secret(
         Returns the secret as a string
     """
 
-    if aio._is_running_on_databricks():
+    if aiox._is_running_on_databricks():
         return dbutils.secrets.get(scope=scope, key=key)
-    elif aio._is_running_on_devops_pipeline():
+    elif aiox._is_running_on_devops_pipeline():
         key_right_format = key.upper().replace("-", "_")
         return os.environ[key_right_format]
     else:

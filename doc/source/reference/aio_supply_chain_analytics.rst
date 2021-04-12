@@ -2,7 +2,7 @@
 AIO Supply Chain Analytics
 ==========================================
 
-.. currentmodule:: aio
+.. currentmodule:: aiox
 
 List of Functions
 ~~~~~~~~~~~~~~~~~

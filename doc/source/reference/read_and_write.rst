@@ -2,7 +2,7 @@
 Read and Write
 ====================
 
-.. currentmodule:: aio
+.. currentmodule:: aiox
 
 List of Functions
 ~~~~~~~~~~~~~~~~~

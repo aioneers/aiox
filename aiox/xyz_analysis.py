@@ -66,15 +66,15 @@ def xyz_analysis(
         
     Examples
     --------
-    >>> import aio
+    >>> import aiox
     >>> 
     >>> # create sample data 
     >>> quantities = {}
     >>> np.random.seed(seed=42)
     >>> df = pd.DataFrame()
-    >>> # create random time series with aio.create_time_series function
+    >>> # create random time series with aiox.create_time_series function
     >>> for i in range(10):
-    >>>     quantities = aio.create_time_series(
+    >>>     quantities = aiox.create_time_series(
     >>>         distribution='normal',
     >>>         p_mean=1000,
     >>>         p_std=300,
@@ -111,7 +111,7 @@ def xyz_analysis(
         >>> 116	0459	    18	    00004	2020-09	    1835.0
         >>> 119	0459	    18	    00004	2020-12	    1057.0   
     >>> In [2]:
-    >>> result = aio.yz_analysis(
+    >>> result = aiox.yz_analysis(
     >>>        df=df,primary_dimension_keys=["Material","Country", "Region"],
     >>>        relevant_numeric_dimension="Quantity", 
     >>>        relevant_date_dimension="Date",
