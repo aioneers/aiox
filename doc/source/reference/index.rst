@@ -1,5 +1,5 @@
 =================
-AIO Documentation
+AIOx Documentation
 =================
 
 This page gives an overview of all public objects, functions and methods.

@@ -2,7 +2,7 @@
 Azure Key Vault API
 ====================
 
-.. currentmodule:: aio
+.. currentmodule:: aiox
 
 List of Functions
 ~~~~~~~~~~~~~~~~~

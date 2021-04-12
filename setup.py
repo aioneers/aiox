@@ -4,26 +4,28 @@ from pathlib import Path
 import os
 import platform
 
-# Make the Readme.md as long description
-if platform.system() == "Linux":
-    long_description = "not yet working on Databricks"
-else:
-    with open(
-        str(Path(os.path.abspath(__file__)).parent.parent) + "/README.md", "r"
-    ) as fh:
-        long_description = fh.read()
+long_description = "Currently not working"
+
+# # Make the Readme.md as long description
+# if platform.system() == "Linux":
+#     long_description = "not yet working on Databricks"
+# else:
+#     with open(
+#         str(Path(os.path.abspath(__file__)).parent.parent) + "/README.md", "r"
+#     ) as fh:
+#         long_description = fh.read()
 
 setuptools.setup(
-    name="aio",
-    version="0.0.3",
+    name="aiox",
+    version="0.0.4",
     author="AIO",
     author_email="maintainer@aioneers.com",
     license="MIT",
-    description="AIO tools",
+    description="AIOx",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/aioneers/aio",
-    download_url="https://github.com/aioneers/aio/archive/0.0.3.tar.gz",
+    url="https://github.com/aioneers/aiox",
+    download_url="https://github.com/aioneers/aiox/tags",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

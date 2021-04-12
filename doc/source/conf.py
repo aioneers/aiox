@@ -18,12 +18,12 @@ sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 
-project = "aio"
+project = "aiox"
 copyright = "2021, AIO"
 author = "AIO"
 
 # The full version, including alpha/beta/rc tags
-release = "0.0.3"
+release = "0.0.4"
 
 
 # -- General configuration ---------------------------------------------------
@@ -36,10 +36,6 @@ extensions = [
     "sphinx.ext.coverage",
     "sphinx.ext.autosummary",
     "numpydoc",
-    # "nbsphinx",
-    # "sphinxcontrib.confluencebuilder",
-    # "IPython.sphinxext.ipython_directive",
-    # "IPython.sphinxext.ipython_console_highlighting",
 ]
 
 
