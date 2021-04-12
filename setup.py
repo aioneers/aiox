@@ -17,7 +17,7 @@ long_description = "Currently not working"
 
 setuptools.setup(
     name="aiox",
-    version="0.0.4",
+    version="0.0.5",
     author="AIO",
     author_email="maintainer@aioneers.com",
     license="MIT",
