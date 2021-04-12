@@ -66,7 +66,7 @@ def xyz_analysis(
         
     Examples
     --------
-    >>> import aio
+    >>> import aiox
     >>> 
     >>> # create sample data 
     >>> quantities = {}

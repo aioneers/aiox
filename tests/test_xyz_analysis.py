@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import aio
+import aiox
 
 
 def test_xyz_analysis():

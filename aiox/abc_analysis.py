@@ -46,7 +46,7 @@ def abc_analysis(
 
     Examples
     --------
-    >>> import aio
+    >>> import aiox
     >>> # create sample data
     >>> products, quantities = {}, {}
     >>> np.random.seed(seed=0)
