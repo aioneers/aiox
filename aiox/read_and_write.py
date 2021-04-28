@@ -8,26 +8,23 @@ from pathlib import Path
 import warnings
 
 
-def _write(data,
-           file_name,
-           file_location=None,
-           write_directory=None,
-           to='both',
-           verbose=False):
+def _write(
+    data, file_name, file_location=None, write_directory=None, to="both", verbose=False
+):
     """
     Save dataframe to the directory as parquet, csv or both
 
     Parameters
     ----------
-    data: DataFrame
+    data : DataFrame
         The DataFrame to be written (saved).
-    file_name: str
+    file_name : str
         The name of a data file (e.g: 'data.csv').
-    file_location: str or path object
+    file_location : str or path object
         The path of a data file location (folder)
-    write_directory: str or path object
+    write_directory : str or path object
         The desired path to save the new file (folder)
-    to: {'csv', 'parquet', 'both'}, optional
+    to : {'csv', 'parquet', 'both'}, optional
         The format to save the data. Default is 'both'.
     verbose: bool, default False
         Informs when writing the file is successful.
@@ -36,9 +33,9 @@ def _write(data,
     -------
     Error when the file name does not contain csv or xls.
     """
-    if to == 'csv' or to == 'both':
+    if to == "csv" or to == "both":
         # save as csv
-        csv_file_name = 'py_' + Path(str(file_name)).stem + '.csv'
+        csv_file_name = "py_" + Path(str(file_name)).stem + ".csv"
         if (file_location is None) and (write_directory is None):
             data.to_csv(csv_file_name, index=False)
         elif write_directory is None:
@@ -47,8 +44,8 @@ def _write(data,
             data.to_csv(join(write_directory, csv_file_name), index=False)
         if verbose:
             print("{} is saved to the directory".format(csv_file_name))
-    if to == 'parquet' or to == 'both':
-        parquet_file_name = 'py_' + Path(str(file_name)).stem + '.parquet'
+    if to == "parquet" or to == "both":
+        parquet_file_name = "py_" + Path(str(file_name)).stem + ".parquet"
         if (file_location is None) and (write_directory is None):
             data.to_parquet(parquet_file_name, index=False)
         elif write_directory is None:
@@ -59,12 +56,14 @@ def _write(data,
             print("{} is saved to the directory".format(parquet_file_name))
 
 
-def read_and_write(file_name,
-                   file_location=None,
-                   write_directory=None,
-                   to='both',
-                   sep=',',
-                   verbose=False):
+def read_and_write(
+    file_name,
+    file_location=None,
+    write_directory=None,
+    to="both",
+    sep=",",
+    verbose=False,
+):
     """
     Read CSV or Excel files by removing bad lines and save them
     as parquet, csv or both
@@ -80,7 +79,7 @@ def read_and_write(file_name,
     to: {'csv', 'parquet', 'both'}, optional
         The format to save the data. Default is 'both'.
     sep: str, default ‘,’
-        Delimiter to use. 
+        Delimiter to use.
     verbose: bool, default False
         Informs when writing the file is successful.
 
@@ -91,42 +90,55 @@ def read_and_write(file_name,
 
     if not _check_file(file_name):
         if verbose:
-            warnings.warn("Warning.............{} is not valid or"
-                          "it's been already created".format(file_name))
+            warnings.warn(
+                "Warning.............{} is not valid or"
+                "it's been already created".format(file_name)
+            )
     else:
         # Create file path
         if file_location is not None:
             f_path = join(file_location, file_name)
         else:
-            f_path = file_name #os.path.abspath(file_name)
+            f_path = file_name  # os.path.abspath(file_name)
 
     # try to read the file
-    if 'csv' in str(file_name):
-        df = pd.read_csv(f_path, sep=sep, error_bad_lines=False, engine="python", dtype=str)
+    if "csv" in str(file_name):
+        df = pd.read_csv(
+            f_path, sep=sep, error_bad_lines=False, engine="python", dtype=str
+        )
         # Save to directory
-        _write(df,
-                file_name,
-                file_location=file_location,
-                write_directory=write_directory,
-                to=to,
-                verbose=verbose)
+        _write(
+            df,
+            file_name,
+            file_location=file_location,
+            write_directory=write_directory,
+            to=to,
+            verbose=verbose,
+        )
     elif "xls" in str(file_name).lower():
         df = pd.read_excel(f_path, dtype=str)
         # Save to directory
-        _write(df,
-                file_name,
-                file_location=file_location,
-                write_directory=write_directory,
-                to=to,
-                verbose=verbose)
+        _write(
+            df,
+            file_name,
+            file_location=file_location,
+            write_directory=write_directory,
+            to=to,
+            verbose=verbose,
+        )
     else:
-        raise ValueError("Could not read {}, because {} is not .csv or excel file".format(file_name, file_name))
+        raise ValueError(
+            "Could not read {}, because {} is not .csv or excel file".format(
+                file_name, file_name
+            )
+        )
 
 
 def _check_file(file_name):
     """
     Check if the file name is csv or xls or it has not
     been created already.
+
     Parameters
     ----------
     file_name: str
@@ -134,13 +146,13 @@ def _check_file(file_name):
 
     Returns
     -------
-    bool:
+    file: bool
         True if the file is csv or xls and has not been already created.
     """
     # check if the file has been created or not
-    if ('py_' in str(file_name)) or ('ipynb' in str(file_name)):
+    if ("py_" in str(file_name)) or ("ipynb" in str(file_name)):
         file = False
-    elif ('csv' in str(file_name)) or ("xls" in str(file_name).lower()):
+    elif ("csv" in str(file_name)) or ("xls" in str(file_name).lower()):
         file = True
     # if it is not csv or xls
     else:
@@ -148,10 +160,7 @@ def _check_file(file_name):
     return file
 
 
-def read_and_write_all(folder_path,
-                       to='both',
-                       write_directory=None,
-                       verbose=False):
+def read_and_write_all(folder_path, to="both", write_directory=None, verbose=False):
     """
     Read CSV or Excel files in the folder by removing bad lines
     and save them as parquet, csv or both
@@ -176,20 +185,18 @@ def read_and_write_all(folder_path,
         if isfile(f_path) and _check_file(f):
             if verbose:
                 print("{}: Reading {} ...".format(i, f))
-            read_and_write(f,
-                           folder_path,
-                           write_directory,
-                           to=to,
-                           verbose=verbose)
+            read_and_write(f, folder_path, write_directory, to=to, verbose=verbose)
 
 
-def read_and_concat(list_of_files,
-                    file_location=None,
-                    write_directory=None,
-                    parquet=True,
-                    by_row=True,
-                    save_by=None,
-                    sep=','):
+def read_and_concat(
+    list_of_files,
+    file_location=None,
+    write_directory=None,
+    parquet=True,
+    by_row=True,
+    save_by=None,
+    sep=",",
+):
     """
     Read a list of parquet or csv file and concatenate them by row
     or by column. The file is written in the directory under the
@@ -211,7 +218,7 @@ def read_and_concat(list_of_files,
         If not None, the concatenate dataframe is written to the
         file_location under this name.
     sep: str, default ‘,’
-        Delimiter to use. 
+        Delimiter to use.
 
     Returns
     -------
@@ -236,24 +243,23 @@ def read_and_concat(list_of_files,
         concat_output = pd.concat(lists_of_dfs, axis=1)
     if save_by is not None:
         if parquet:
-            to = 'parquet'
+            to = "parquet"
         else:
-            to = 'csv'
-        _write(concat_output,
-               save_by,
-               file_location,
-               write_directory,
-               to=to,
-               verbose=False)
+            to = "csv"
+        _write(
+            concat_output, save_by, file_location, write_directory, to=to, verbose=False
+        )
     return concat_output
 
 
-def read_all_sheets(excel_file,
-                    file_location=None,
-                    write_directory=None,
-                    by_row=True,
-                    save_by=None,
-                    to='both'):
+def read_all_sheets(
+    excel_file,
+    file_location=None,
+    write_directory=None,
+    by_row=True,
+    save_by=None,
+    to="both",
+):
     """
     Read an excel file with multiple sheets and concatenate the sheets
 
@@ -290,10 +296,7 @@ def read_all_sheets(excel_file,
     else:
         concat_output = pd.concat(list_of_dfs, axis=1)
     if save_by is not None:
-        _write(concat_output,
-               save_by,
-               file_location,
-               write_directory,
-               to=to,
-               verbose=False)
+        _write(
+            concat_output, save_by, file_location, write_directory, to=to, verbose=False
+        )
     return list_of_dfs
