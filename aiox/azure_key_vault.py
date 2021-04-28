@@ -1,14 +1,9 @@
 import os
-import aiox
 
 dbutils = None
 
 
-def vault_get_secret(
-    scope: str,
-    key: str,
-    databricks=None,
-) -> str:
+def vault_get_secret(scope: str, key: str, databricks=None,) -> str:
     """Get a secret from an Azure Key Vault
 
     This function takes a secret by using either Databricks ``dbutils`` or Azure Python API libraries
@@ -27,9 +22,9 @@ def vault_get_secret(
         Returns the secret as a string
     """
 
-    if aiox._is_running_on_databricks():
+    if _is_running_on_databricks():
         return dbutils.secrets.get(scope=scope, key=key)
-    elif aiox._is_running_on_devops_pipeline():
+    elif _is_running_on_devops_pipeline():
         key_right_format = key.upper().replace("-", "_")
         return os.environ[key_right_format]
     else:
