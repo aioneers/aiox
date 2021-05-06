@@ -2,26 +2,27 @@ trigger:
   - dev
 
 pool:
-  vmImage: "ubuntu-latest"
+  vmImage: 'ubuntu-latest'
 strategy:
   matrix:
     Python37:
-      python.version: "3.7"
+      python.version: '3.7'
     Python38:
-      python.version: "3.8"
+      python.version: '3.8'
 
 steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: "$(python.version)"
-    displayName: "Use Python $(python.version)"
+      versionSpec: '$(python.version)'
+    displayName: 'Use Python $(python.version)'
 
   - script: |
       python -m pip install --upgrade pip
+      pip install wheel
       pip install -e .
-    displayName: "Install library with dependencies"
+    displayName: 'Install library with dependencies'
 
   - script: |
       pip install pytest pytest-azurepipelines
       pytest
-    displayName: "pytest"
+    displayName: 'pytest'
