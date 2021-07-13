@@ -24,7 +24,7 @@ def abc_analysis(
     primary_dimension : string
         Column name in input DataFrame holding object to be classified, e.g. product.
 
-    secondary_dimension : list of strings = None
+    secondary_dimensions : list of strings = None
         List of columns names in input DataFrame holding additional attributes of primary_dimension to
         structure classification on a more granular level, e.g. country, region, city
 
@@ -62,8 +62,6 @@ def abc_analysis(
     >>>     df, primary_dimension="Product", numeric_dimension="Quantity"
     >>> )
     """
-    # assign input variables
-    A, B = A, B
 
     columns = {
         primary_dimension: "primary_dimension",
@@ -77,7 +75,8 @@ def abc_analysis(
     #         return multi_dim_abc_analysis(df=df,master_dimension=master_dimension,secondary_dimensions="X",numeric_dimension=numeric_dimension)
     else:
         # aggregate secondary dimensions into one key column
-        df["secondary_dimension"] = df[secondary_dimensions].agg("-".join, axis=1)
+        df["secondary_dimension"] = df[secondary_dimensions].agg(
+            "-".join, axis=1)
 
     # calculate cumsum for secondary dimension
     df_subsum = (
@@ -96,10 +95,12 @@ def abc_analysis(
     )
 
     # prepare DataFrame to calculate relative quantity
-    dict_subsum = {k: list(v.values()) for k, v in df_subsum.to_dict("index").items()}
+    dict_subsum = {k: list(v.values())
+                   for k, v in df_subsum.to_dict("index").items()}
     for i in range(len(df_grouped["secondary_dimension"].unique())):
         df_grouped.loc[
-            df_grouped["secondary_dimension"] == dict_subsum.get(i)[0], "Cumsum_Sec_Dim"
+            df_grouped["secondary_dimension"] == dict_subsum.get(i)[
+                0], "Cumsum_Sec_Dim"
         ] = dict_subsum.get(i)[1]
 
     # calculate relative quantity
@@ -113,6 +114,22 @@ def abc_analysis(
         .groupby(df_grouped["secondary_dimension"])
         .cumsum()
     )
+
+    # calculate rank per secondary dimension
+    df_grouped['rank'] = df_grouped.groupby('secondary_dimension')[
+        'Relative_Quantity'].rank(ascending=False, na_option="bottom")
+
+    # calculate elements per secondary dimension
+    elements_per_dim = df_grouped.groupby("secondary_dimension")[
+        "primary_dimension"].describe()["count"]
+    elements_per_dim = elements_per_dim.rename(
+        "elements_per_secondary_dimension")
+
+    # calculate relative rank per secondary dimension
+    df_grouped = df_grouped.merge(
+        right=elements_per_dim, how="left", on="secondary_dimension", validate="m:1")
+    df_grouped["relative_rank"] = df_grouped["rank"] / \
+        df_grouped["elements_per_secondary_dimension"]
 
     # prepare ABC classification thresholds and classes
     class_thresholds = [

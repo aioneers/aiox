@@ -33,7 +33,7 @@ def xyz_analysis(
     relevant_numeric_dimension : string
         Column name in the input DataFrame holding numeric values to be used for classification, e.g. periods with
         demand for a product.
-        
+
     relevant_date_dimension : string
         Column in the input DataFrame holding the dates to the relevant_numeric_dimension values.
 
@@ -47,7 +47,7 @@ def xyz_analysis(
         Number of periods the classification is performed for.
 
     frequency : string
-        Frequency of the periods the classification is performed for, e.g. "D" for days,
+        Frequency of the periods the classification is performed for, e.g. "D" for days, "W" for weeks,
         "M" for months, "Q" for quarters, "Y" for years
 
     X, Y : float = 0.5, 1
@@ -63,7 +63,7 @@ def xyz_analysis(
     df_return : Pandas.DataFrame
         Output DataFrame returned grouped by provided primary- & secondary dimensions with respective
         classification and cumulative values
-        
+
     Examples
     --------
     >>> import aiox
@@ -129,46 +129,51 @@ def xyz_analysis(
     >>> 4	327.333333	516.059780	        4	            1.576557	                0.333333                   Z	        Low             0498     16       00002
     """
     # create key
-    if type(primary_dimension_keys)==list:
-        df["key"] = df[primary_dimension_keys].apply(lambda row: "~~~".join(row.values.astype(str)), axis=1)
-    elif type(primary_dimension_keys)==str:
+    if type(primary_dimension_keys) == list:
+        df["key"] = df[primary_dimension_keys].apply(
+            lambda row: "~~~".join(row.values.astype(str)), axis=1)
+    elif type(primary_dimension_keys) == str:
         df["key"] = df[primary_dimension_keys]
-      
+
     # rename provided column names of input DataFrame
     d_columns = {
         relevant_numeric_dimension: "numeric_dimension",
         relevant_date_dimension: "Date"
     }
-    
+
     df = df.rename(columns=d_columns)
 
     # generate list of keys for df_expanded by periods times keys
     l_keys_in_df = (
         df["key"].unique().tolist()
-    )  # get a list of all the distinct keys from the input DataFrame    
-    
+    )  # get a list of all the distinct keys from the input DataFrame
+
     l_keys_in_df_x_periods = [[key] * periods for key in l_keys_in_df]
     l_keys = list(itertools.chain(*l_keys_in_df_x_periods))
-    
+
     # construct complete DataFrame for statistical analysis
     df_expanded = pd.DataFrame(l_keys, columns=["key"])
 
     # generate periods ("Date") Series by key times periods
-    period_range = pd.period_range(start=start_date, periods=periods, freq=frequency)
-    df_periods = pd.DataFrame(period_range.to_series(name="Date").astype(str).reset_index().drop(columns=["index"]))
-    
+    period_range = pd.period_range(
+        start=start_date, periods=periods, freq=frequency)
+    df_periods = pd.DataFrame(period_range.to_series(
+        name="Date").astype(str).reset_index().drop(columns=["index"]))
+
     # add ("Date") Series to df_expanded
-    df_expanded["Date"] = pd.concat([df_periods ]*len(l_keys_in_df), ignore_index=True)
+    df_expanded["Date"] = pd.concat(
+        [df_periods]*len(l_keys_in_df), ignore_index=True)
 
     # aggregate input DataFrame to deal with > 1 record per period
-    df = df.groupby(["key","Date"]).sum()
+    df = df.groupby(["key", "Date"]).sum()
 
     # merge DataFrames (df & df_expanded) & fillna to prepare statisitcal analysis
     df_expanded = df_expanded.merge(
         df, left_on=["key", "Date"], right_on=["key", "Date"], how="outer"
     )
     # fill NaN values with 0 for statistical analysis
-    df_expanded["numeric_dimension"] = df_expanded["numeric_dimension"].fillna(0)
+    df_expanded["numeric_dimension"] = df_expanded["numeric_dimension"].fillna(
+        0)
 
     # statistical analysis as preparation for classification
     df_return = pd.DataFrame()
@@ -184,9 +189,9 @@ def xyz_analysis(
         )
         .reset_index()
     )
-  
+
     df_return.columns = ["index", "key", "Mean", "Standard_Deviation"]
-    
+
     df_return = df_return.merge(
         df_expanded.groupby("key")["numeric_dimension"]
         .apply(lambda x: (x > 0).sum())
@@ -200,29 +205,29 @@ def xyz_analysis(
 #         df_return["Mean"]
 #     )
 
-    df_return["Coefficient_of_Variation"] = np.where(df_return["Mean"] <= 0, float("NaN") , (df_return["Standard_Deviation"]) / (
+    df_return["Coefficient_of_Variation"] = np.where(df_return["Mean"] <= 0, float("NaN"), (df_return["Standard_Deviation"]) / (
         df_return["Mean"]
     ))
-    
+
     df_return["Relative_Non_Zero_Period_Count"] = df_return["Non_Zero_Count"] / periods
     df_return = df_return.drop(columns=["index"])
 
     # prepare XYZ classification thresholds and classes
-  
+
     class_thresholds_xyz = [
         (df_return["Coefficient_of_Variation"].isna()),
         (
             (df_return["Coefficient_of_Variation"] > 0) &
             (df_return["Coefficient_of_Variation"] <= X)
-         ),
+        ),
         (
             (df_return["Coefficient_of_Variation"] > X)
             & (df_return["Coefficient_of_Variation"] <= Y)
         ),
         (df_return["Coefficient_of_Variation"] > Y)
     ]
-    class_values_xyz = ["N","X", "Y", "Z"]
-    
+    class_values_xyz = ["N", "X", "Y", "Z"]
+
     # classify XYZ
     df_return["XYZ_Class"] = np.select(class_thresholds_xyz, class_values_xyz)
 
@@ -238,10 +243,12 @@ def xyz_analysis(
     class_values_freq = ["Low", "Medium", "High"]
 
     # classify frequency
-    df_return["Frequency_Class"] = np.select(class_thresholds_freq, class_values_freq)
+    df_return["Frequency_Class"] = np.select(
+        class_thresholds_freq, class_values_freq)
 
     # bring back inputed dimensions names for better understandable output
-    df_return[primary_dimension_keys] = df_return["key"].str.split("~~~", expand=True)
+    df_return[primary_dimension_keys] = df_return["key"].str.split(
+        "~~~", expand=True)
     df_return = df_return.drop(columns="key")
 
     return df_return
