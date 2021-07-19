@@ -88,7 +88,8 @@ def abc_analysis(
 
     # create return DataFrame in target grouping
     df_grouped = (
-        df.groupby(["secondary_dimension", "primary_dimension"])
+        df.groupby(["secondary_dimension", "primary_dimension"],
+                   as_index=False)
         .sum()
         .sort_values(by=(["secondary_dimension", "numeric_dimension"]), ascending=False)
         .reset_index()
@@ -116,7 +117,7 @@ def abc_analysis(
     )
 
     # calculate rank per secondary dimension
-    df_grouped['rank'] = df_grouped.groupby('secondary_dimension')[
+    df_grouped['rank'] = df_grouped.groupby('secondary_dimension', as_index=False)[
         'Relative_Quantity'].rank(ascending=False, na_option="bottom")
 
     # calculate elements per secondary dimension
