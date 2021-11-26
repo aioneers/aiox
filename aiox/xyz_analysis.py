@@ -47,7 +47,7 @@ def xyz_analysis(
         Number of periods the classification is performed for.
 
     frequency : string
-        Frequency of the periods the classification is performed for, e.g. "D" for days,
+        Frequency of the periods the classification is performed for, e.g. "D" for days,"W" for weeks,
         "M" for months, "Q" for quarters, "Y" for years
 
     X, Y : float = 0.5, 1
@@ -128,6 +128,7 @@ def xyz_analysis(
     >>> 3	561.583333	676.746959	        6	            1.205070	                0.500000                   Z	        Medium	        0459     18       00004
     >>> 4	327.333333	516.059780	        4	            1.576557	                0.333333                   Z	        Low             0498     16       00002
     """
+    
     # create key
     if type(primary_dimension_keys)==list:
         df["key"] = df[primary_dimension_keys].apply(lambda row: "~~~".join(row.values.astype(str)), axis=1)
@@ -154,7 +155,7 @@ def xyz_analysis(
     df_expanded = pd.DataFrame(l_keys, columns=["key"])
 
     # generate periods ("Date") Series by key times periods
-    period_range = pd.period_range(start=start_date, periods=periods, freq=frequency)
+    period_range = pd.date_range(start=start_date, periods=periods, freq=frequency)
     df_periods = pd.DataFrame(period_range.to_series(name="Date").astype(str).reset_index().drop(columns=["index"]))
     
     # add ("Date") Series to df_expanded
@@ -162,6 +163,7 @@ def xyz_analysis(
 
     # aggregate input DataFrame to deal with > 1 record per period
     df = df.groupby(["key","Date"]).sum()
+    df.drop(df.columns.difference(['key','Date',"numeric_dimension"]), 1, inplace=True)
 
     # merge DataFrames (df & df_expanded) & fillna to prepare statisitcal analysis
     df_expanded = df_expanded.merge(
