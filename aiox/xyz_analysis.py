@@ -47,7 +47,7 @@ def xyz_analysis(
         Number of periods the classification is performed for.
 
     frequency : string
-        Frequency of the periods the classification is performed for, e.g. "D" for days,
+        Frequency of the periods the classification is performed for, e.g. "D" for days, "W" for weeks,
         "M" for months, "Q" for quarters, "Y" for years
 
     X, Y : float = 0.5, 1
@@ -154,7 +154,7 @@ def xyz_analysis(
     df_expanded = pd.DataFrame(l_keys, columns=["key"])
 
     # generate periods ("Date") Series by key times periods
-    period_range = pd.period_range(start=start_date, periods=periods, freq=frequency)
+    period_range = pd.date_range(start=start_date, periods=periods, freq=frequency)
     df_periods = pd.DataFrame(period_range.to_series(name="Date").astype(str).reset_index().drop(columns=["index"]))
     
     # add ("Date") Series to df_expanded
@@ -162,6 +162,7 @@ def xyz_analysis(
 
     # aggregate input DataFrame to deal with > 1 record per period
     df = df.groupby(["key","Date"]).sum()
+    df.drop(df.columns.difference(['key','Date',"numeric_dimension"]), 1, inplace=True)
 
     # merge DataFrames (df & df_expanded) & fillna to prepare statisitcal analysis
     df_expanded = df_expanded.merge(
