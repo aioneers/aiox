@@ -246,6 +246,5 @@ def test_xyz_analysis_weekly():
         start_date="2020-01",
         frequency="W",
     )
-
     a = result.loc[result['XYZ_Class'] == 'Z'] 
     assert len(a) 
