@@ -158,10 +158,10 @@ def abc_analysis(
     if classified_only:
         df_grouped = df_grouped.drop(
             columns=[
-                "Cumsum_Relative_numeric_dimension",
+                #"Cumsum_Relative_numeric_dimension",
                 "Relative_numeric_dimension",
                 "Cumsum_Sec_Dim",
-                "Cumsum_Relative_numeric_dimension",
+                #"Cumsum_Relative_numeric_dimension",
                 "secondary_dimension",
                 "Relative_primary_dimension",
                 "Cumsum_Relative_primary_dimension",
