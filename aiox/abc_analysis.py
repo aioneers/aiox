@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 
 def abc_analysis(
@@ -103,25 +104,41 @@ def abc_analysis(
         ] = dict_subsum.get(i)[1]
 
     # calculate relative quantity
-    df_grouped["Relative_Quantity"] = (
+    df_grouped["Relative_numeric_dimension"] = (
         df_grouped["numeric_dimension"] / df_grouped["Cumsum_Sec_Dim"]
     )
 
-    # calculate cumsum relative quantity
-    df_grouped["Cumsum_Relative_Quantity"] = (
-        df_grouped["Relative_Quantity"]
+    # calculate cumsum relative quantity (~y-axis in pareto chart)
+    df_grouped["Cumsum_Relative_numeric_dimension"] = (
+        df_grouped["Relative_numeric_dimension"]
+        .groupby(df_grouped["secondary_dimension"])
+        .cumsum()
+    )
+
+    # add relative primary & secondary dimension for visualization in (~x-axis in pareto chart)
+    d_rel_primary_dimension = (
+        df_grouped.groupby(df_grouped["secondary_dimension"])
+        .apply(lambda x: 1 / len(x))
+        .to_dict()
+    )
+    df_grouped["Relative_primary_dimension"] = df_grouped[
+        "secondary_dimension"
+    ].replace(d_rel_primary_dimension)
+
+    df_grouped["Cumsum_Relative_primary_dimension"] = (
+        df_grouped["Relative_primary_dimension"]
         .groupby(df_grouped["secondary_dimension"])
         .cumsum()
     )
 
     # prepare ABC classification thresholds and classes
     class_thresholds = [
-        (df_grouped["Cumsum_Relative_Quantity"] <= A),
+        (df_grouped["Cumsum_Relative_numeric_dimension"] <= A),
         (
-            (df_grouped["Cumsum_Relative_Quantity"] > A)
-            & (df_grouped["Cumsum_Relative_Quantity"] <= B)
+            (df_grouped["Cumsum_Relative_numeric_dimension"] > A)
+            & (df_grouped["Cumsum_Relative_numeric_dimension"] <= B)
         ),
-        (df_grouped["Cumsum_Relative_Quantity"] > B),
+        (df_grouped["Cumsum_Relative_numeric_dimension"] > B),
     ]
     class_values = ["A", "B", "C"]
 
@@ -141,11 +158,13 @@ def abc_analysis(
     if classified_only:
         df_grouped = df_grouped.drop(
             columns=[
-                "Cumsum_Relative_Quantity",
-                "Relative_Quantity",
+                #"Cumsum_Relative_numeric_dimension",
+                "Relative_numeric_dimension",
                 "Cumsum_Sec_Dim",
-                "Cumsum_Relative_Quantity",
+                #"Cumsum_Relative_numeric_dimension",
                 "secondary_dimension",
+                "Relative_primary_dimension",
+                "Cumsum_Relative_primary_dimension",
             ]
         )
 
