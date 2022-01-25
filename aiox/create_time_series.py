@@ -84,7 +84,7 @@ def create_time_series(
 
     df.loc[df["Quantity"].sample(frac=intermittency).index] = 0
 
-    df["Date"] = pd.date_range(base_date, periods=num_periods, freq="D")
+    df["Date"] = pd.date_range(base_date, periods=num_periods, freq=periodicity)
 
     df["Value"] = df["Quantity"] * standard_price
 
