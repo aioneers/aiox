@@ -78,7 +78,8 @@ def abc_analysis(
     #         return multi_dim_abc_analysis(df=df,master_dimension=master_dimension,secondary_dimensions="X",numeric_dimension=numeric_dimension)
     else:
         # aggregate secondary dimensions into one key column
-        df["secondary_dimension"] = df[secondary_dimensions].agg("-".join, axis=1)
+        df["secondary_dimension"] = df[secondary_dimensions].agg(
+            "-".join, axis=1)
 
     # calculate cumsum for secondary dimension
     df_subsum = (
@@ -97,10 +98,12 @@ def abc_analysis(
     )
 
     # prepare DataFrame to calculate relative quantity
-    dict_subsum = {k: list(v.values()) for k, v in df_subsum.to_dict("index").items()}
+    dict_subsum = {k: list(v.values())
+                   for k, v in df_subsum.to_dict("index").items()}
     for i in range(len(df_grouped["secondary_dimension"].unique())):
         df_grouped.loc[
-            df_grouped["secondary_dimension"] == dict_subsum.get(i)[0], "Cumsum_Sec_Dim"
+            df_grouped["secondary_dimension"] == dict_subsum.get(i)[
+                0], "Cumsum_Sec_Dim"
         ] = dict_subsum.get(i)[1]
 
     # calculate relative quantity
@@ -158,10 +161,9 @@ def abc_analysis(
     if classified_only:
         df_grouped = df_grouped.drop(
             columns=[
-                #"Cumsum_Relative_numeric_dimension",
+                "Cumsum_Relative_numeric_dimension",
                 "Relative_numeric_dimension",
                 "Cumsum_Sec_Dim",
-                #"Cumsum_Relative_numeric_dimension",
                 "secondary_dimension",
                 "Relative_primary_dimension",
                 "Cumsum_Relative_primary_dimension",
